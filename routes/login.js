@@ -11,25 +11,25 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function (req, res, next) {
   const username = req.body.username
-  const password = req.body.password  
+  const password = req.body.password
 
   if (username && password) {
     knex('users')
       .where('username', username)
       .then((result) => {
         if (result.length !== 1) {
-          res.status(400).send(JSON.stringify({ message: 'Bad username'}))
+          res.status(400).render('login', { errorMessage: 'Bad username. Flourine, Uranimum, Carbon, Potassium.' })
         }
         else if (bcrypt.compareSync(password, result[0].password)) {
-          res.status(400).send(JSON.stringify({ message: 'You HACK THE GIBSON'}))
+          res.redirect('/')
         }
         else {
-          res.status(400).send(JSON.stringify({ message: 'Bad password'}))
+          res.status(400).render('login', { errorMessage: 'Bad password' })
         }
       })
   }
   else {
-    res.status(400).send(JSON.stringify({ message: 'Must username and password'}))
+    res.status(400).render('login', { errorMessage: 'Must have username and password' })
   }
 })
 
